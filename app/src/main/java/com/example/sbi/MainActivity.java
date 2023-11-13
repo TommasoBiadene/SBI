@@ -18,14 +18,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        replaceFragment( new HomeFragment());
 
+        binding.bottomNavigationView.setSelectedItemId(R.id.home);
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
-            switch (item.getItemId()){
+           if (item.getItemId() == R.id.forum){
+                replaceFragment(new ForumFragment());
+            }else if(item.getItemId() == R.id.home){
+               replaceFragment(new HomeFragment());
+           }else if(item.getItemId() == R.id.messaggi){
+               replaceFragment(new MessageFragment());
+           }else if(item.getItemId() == R.id.ricerca){
+               replaceFragment(new SearchFragment());
+           }else if(item.getItemId() == R.id.profilo){
 
-                case R.id.home:
-                    break;
-            }
+           }
             return  true;
         });
     }
