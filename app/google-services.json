@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "404196518704",
+    "firebase_url": "https://sisbi-91d28-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sisbi-91d28",
+    "storage_bucket": "sisbi-91d28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404196518704:android:5181d1631a7a659c09f6f5",
+        "android_client_info": {
+          "package_name": "com.example.sbi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJhjLHMc2p5_HGmELkhghykJh7Fmv1-Qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
