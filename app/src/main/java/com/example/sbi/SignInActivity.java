@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,7 +28,9 @@ public class SignInActivity extends AppCompatActivity {
 
 
     MaterialButton btn;
-    private TextInputEditText email,psswd;
+    private TextInputEditText email,psswd,surname,name,username,passwdc;
+
+    private RadioButton r1,r2;
     private FirebaseAuth auth;
 
     @Override
@@ -45,13 +48,30 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 email = findViewById(R.id.editTextemailSU);
                 psswd = findViewById(R.id.editTextpswSU);
+                r1 = findViewById(R.id.rdb1SU);
+                r2 = findViewById(R.id.rdb2SU);
+                surname = findViewById(R.id.editTextsurnameSU);
+                name = findViewById(R.id.editTextnamesSU);
+                username = findViewById(R.id.editTextUsrSU);
+                passwdc = findViewById(R.id.editTextpswconfSU);
 
 
-                if(!TextUtils.isEmpty(email.getText()) && !TextUtils.isEmpty(psswd.getText()) ) {
+
+                if(!r1.isChecked() && !r2.isChecked())
+                {
+
+                    Toast.makeText(SignInActivity.this,"you need to accept the radio button",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+
+                if(!TextUtils.isEmpty(email.getText()) && !TextUtils.isEmpty(psswd.getText()) && !TextUtils.isEmpty(surname.getText()) &&
+                !TextUtils.isEmpty(surname.getText()) &&  !TextUtils.isEmpty(name.getText())&& !TextUtils.isEmpty(passwdc.getText())) {
                     String em = email.getText().toString(),
                             pswd = psswd.getText().toString();
 
-                    if (Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches()) {
+                    if (Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches() && pswd.equals(passwdc.getText().toString())) {
 
                         auth.createUserWithEmailAndPassword(em, pswd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
