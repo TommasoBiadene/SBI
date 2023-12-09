@@ -23,6 +23,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -78,6 +84,33 @@ public class SignInActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(SignInActivity.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
+
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    Map<String,String> user = new HashMap<>();
+
+                                    user.put("email",em);
+                                    user.put("username",username.getText().toString());
+                                    user.put("surname",surname.getText().toString());
+                                    user.put("name",name.getText().toString());
+
+                                    db.collection("users")
+                                                    .add(user)
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentReference documentReference) {
+                                                                    Toast.makeText(SignInActivity.this, "Create the table succefully id:"+documentReference.getId(), Toast.LENGTH_SHORT).show();
+
+                                                                }
+                                                            })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Toast.makeText(SignInActivity.this, "SignUp un succefully error:"+e.toString() , Toast.LENGTH_LONG).show();
+
+                                                                        }
+                                                                    });
+
+
                                     startActivity(new Intent(SignInActivity.this, LoginActivity.class));
                                 } else {
                                     Toast.makeText(SignInActivity.this, "SignUp Failed" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
