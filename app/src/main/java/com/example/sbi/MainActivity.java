@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         String test = intent.getStringExtra("email");
 
-        if(test != null)
-         Log.w(TAG,test);
+        /*if(test != null)
+         Log.w(TAG,test);*/
 
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
