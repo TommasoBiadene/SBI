@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             }else if(item.getItemId() == R.id.ricerca){
                 replaceFragment(new SearchFragment());
             }else if(item.getItemId() == R.id.profilo){
-
+                replaceFragment(new PersonFragment());
             }
             return  true;
         });
