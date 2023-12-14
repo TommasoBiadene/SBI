@@ -44,7 +44,16 @@ public class SearchFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private Button myButton;
     private EditText editTextNewText;
-    private TextView temperatureTextView;
+    private TextView AQI;
+    private TextView co;
+    private TextView no;
+    private TextView no2;
+    private TextView o3;
+    private TextView so2;
+    private TextView mp2_5;
+    private TextView mp10;
+    private TextView nh3;
+
 
     private String CityName;
     private String apiKey = "c566ee8a6a9310059a2caf2c6c81d05e",
@@ -82,8 +91,17 @@ public class SearchFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        temperatureTextView = getView().findViewById(R.id.temperatureTextView);
-        temperatureTextView = getView().findViewById(R.id.temperatureTextView);
+        AQI = getView().findViewById(R.id.AQI);
+        co = getView().findViewById(R.id.co);
+        no = getView().findViewById(R.id.no);
+        no2 = getView().findViewById(R.id.no2);
+        o3 = getView().findViewById(R.id.o3);
+        so2 = getView().findViewById(R.id.so2);
+        mp2_5 = getView().findViewById(R.id.mp2_5);
+        mp10 = getView().findViewById(R.id.mp10);
+        nh3 = getView().findViewById(R.id.nh3);
+
+
         myButton = getView().findViewById(R.id.myButton);
 
         // Set up the button click listener
@@ -186,26 +204,34 @@ public class SearchFragment extends Fragment {
                 JSONObject main = list.getJSONObject("main");
                 JSONObject components = list.getJSONObject("components");
                 int aqi = main.getInt("aqi");
-                double co= components.getDouble("co");
-                double no= components.getDouble("no");
-                double no2= components.getDouble("no2");
-                double o3= components.getDouble("o3");
-                double so2= components.getDouble("so2");
-                double pm2_5= components.getDouble("pm2_5");
-                double pm10= components.getDouble("pm10");
-                double nh3= components.getDouble("nh3");
+                double co_= components.getDouble("co");
+                double no_= components.getDouble("no");
+                double no2_= components.getDouble("no2");
+                double o3_= components.getDouble("o3");
+                double so2_= components.getDouble("so2");
+                double pm2_5_= components.getDouble("pm2_5");
+                double pm10_= components.getDouble("pm10");
+                double nh3_= components.getDouble("nh3");
 
 
-                String pollutionInfo = "Air Quality Index (AQI): " + aqi +"\n co "+ co+"\nno "+ no+"\nno2 "+no2+"\no3 "+ o3+"\nso2 "+ so2+"\nmp2_5 "+ pm2_5+"\nmp10 "+ pm10+"\nnh3 "+ nh3/*+"\nlat "+ lat11+"\nlon "+ lon11*/ ;
+                String pollutionInfo = "Air Quality Index (AQI): " + aqi +"\n co "+ co_+"\nno "+ no_+"\nno2 "+no2_+"\no3 "+ o3_+"\nso2 "+ so2_+"\nmp2_5 "+ pm2_5_+"\nmp10 "+ pm10_+"\nnh3 "+ nh3_/*+"\nlat "+ lat11+"\nlon "+ lon11*/ ;
 
-                if(pm10 < 50){
-                    pollutionInfo= pollutionInfo +"\nTranquilllllllo anche oggi non serve la maschera a gas" ;
-                    pollutionInfo= pollutionInfo +"\nTranquilllllllo anche oggi non serve la maschera a gas" ;
+                if(pm10_ < 50){
+                    pollutionInfo= pollutionInfo +"\nElevate quantità di inquinamento rilevato" ;
                 }
 
 
 
-                temperatureTextView.setText( pollutionInfo);
+                //temperatureTextView.setText( pollutionInfo);
+                AQI.setText( "AQI rilevata: "+aqi);
+                co.setText( "Co rilevata: "+co_);
+                no.setText( "No rilevata: "+no_);
+                no2.setText( "No2 rilevata: "+no2_);
+                o3.setText( "O3 rilevata: "+o3_);
+                so2.setText( "So2 rilevata: "+so2_);
+                mp2_5.setText( "Pm2_5 rilevata: "+pm2_5_);
+                mp10.setText( "Pm10 rilevata: "+pm10_);
+                nh3.setText( "Nh3 rilevata: "+nh3_);
 
             } catch (JSONException e) {
                 e.printStackTrace();

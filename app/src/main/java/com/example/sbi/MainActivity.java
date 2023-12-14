@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment( new HomeFragment());
+        //replaceFragment( new HomeFragment());
+        replaceFragment(new SearchFragment());
         Intent intent = getIntent();
 
         String test = intent.getStringExtra("email");
@@ -36,11 +37,13 @@ public class MainActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.forum){
                 replaceFragment(new ForumFragment());
             }else if(item.getItemId() == R.id.home){
-                replaceFragment(new HomeFragment());
+                replaceFragment(new SearchFragment());
+               // replaceFragment(new HomeFragment());
             }else if(item.getItemId() == R.id.messaggi){
                 replaceFragment(new MessageFragment());
             }else if(item.getItemId() == R.id.ricerca){
-                replaceFragment(new SearchFragment());
+                replaceFragment(new HomeFragment());
+                //replaceFragment(new SearchFragment());
             }else if(item.getItemId() == R.id.profilo){
                 replaceFragment(new PersonFragment());
             }
