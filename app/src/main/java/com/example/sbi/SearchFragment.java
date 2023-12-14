@@ -90,12 +90,15 @@ public class SearchFragment extends Fragment {
         myButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Call the changeText function when the button is clicked
-                changeText(v);
                 String apiKey = "c566ee8a6a9310059a2caf2c6c81d05e";
-                String city = CityName;
-                String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
-                new FetchWeatherTask().execute(apiUrl);
+                String city = editTextNewText.getText().toString();
+
+                if(city!= null){
+
+                    String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+                    new FetchWeatherTask().execute(apiUrl);
+                }
+
             }
         });
 
@@ -121,11 +124,7 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_search, container, false);
     }
-    public void changeText(View view) {
-        String newText = editTextNewText.getText().toString();
 
-        CityName = newText;
-    }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, String> {
 
@@ -198,6 +197,7 @@ public class SearchFragment extends Fragment {
 
 
                 String pollutionInfo = "Air Quality Index (AQI): " + aqi +"\n co "+ co+"\nno "+ no+"\nno2 "+no2+"\no3 "+ o3+"\nso2 "+ so2+"\nmp2_5 "+ pm2_5+"\nmp10 "+ pm10+"\nnh3 "+ nh3/*+"\nlat "+ lat11+"\nlon "+ lon11*/ ;
+
                 if(pm10 < 50){
                     pollutionInfo= pollutionInfo +"\nTranquilllllllo anche oggi non serve la maschera a gas" ;
                     pollutionInfo= pollutionInfo +"\nTranquilllllllo anche oggi non serve la maschera a gas" ;
