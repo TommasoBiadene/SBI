@@ -52,7 +52,7 @@ public class SearchFragment extends Fragment {
     private TextView so2;
     private TextView mp2_5;
     private TextView mp10;
-    private TextView nh3;
+    private TextView nh3,error;
 
 
     private String CityName;
@@ -100,6 +100,7 @@ public class SearchFragment extends Fragment {
         mp2_5 = getView().findViewById(R.id.mp2_5);
         mp10 = getView().findViewById(R.id.mp10);
         nh3 = getView().findViewById(R.id.nh3);
+        error = getView().findViewById(R.id.error);
 
 
         myButton = getView().findViewById(R.id.myButton);
@@ -214,10 +215,12 @@ public class SearchFragment extends Fragment {
                 double nh3_= components.getDouble("nh3");
 
 
-                String pollutionInfo = "Air Quality Index (AQI): " + aqi +"\n co "+ co_+"\nno "+ no_+"\nno2 "+no2_+"\no3 "+ o3_+"\nso2 "+ so2_+"\nmp2_5 "+ pm2_5_+"\nmp10 "+ pm10_+"\nnh3 "+ nh3_/*+"\nlat "+ lat11+"\nlon "+ lon11*/ ;
+                //String pollutionInfo = "Air Quality Index (AQI): " + aqi +"\n co "+ co_+"\nno "+ no_+"\nno2 "+no2_+"\no3 "+ o3_+"\nso2 "+ so2_+"\nmp2_5 "+ pm2_5_+"\nmp10 "+ pm10_+"\nnh3 "+ nh3_/*+"\nlat "+ lat11+"\nlon "+ lon11*/ ;
 
-                if(pm10_ < 50){
-                    pollutionInfo= pollutionInfo +"\nElevate quantità di inquinamento rilevato" ;
+
+
+                if(pm10_ > 50){
+                   error.setText("Alti livelli di inquinamento rilevati");
                 }
 
 
@@ -232,6 +235,10 @@ public class SearchFragment extends Fragment {
                 mp2_5.setText( "Pm2_5 rilevata: "+pm2_5_);
                 mp10.setText( "Pm10 rilevata: "+pm10_);
                 nh3.setText( "Nh3 rilevata: "+nh3_);
+
+
+
+
 
             } catch (JSONException e) {
                 e.printStackTrace();

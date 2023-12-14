@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     MaterialButton btn;
     private TextInputEditText email,psswd;
+    TextView text;
     private FirebaseAuth auth;
 
 
@@ -31,8 +33,23 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         btn = findViewById(R.id.btnLogin);
+        text = findViewById(R.id.l);
+
 
         auth = FirebaseAuth.getInstance();
+
+
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,SignInActivity.class));
+            }
+        });
+
+
+
+
+
 
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                                 });
 
 
-                        Toast.makeText(LoginActivity.this, email.getText()+" "+psswd.getText(), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(LoginActivity.this, email.getText()+" "+psswd.getText(), Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(LoginActivity.this,"wrong email format",Toast.LENGTH_SHORT).show();
                     }
