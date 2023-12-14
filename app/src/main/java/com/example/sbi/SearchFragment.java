@@ -123,7 +123,7 @@ public class SearchFragment extends Fragment {
     }
     public void changeText(View view) {
         String newText = editTextNewText.getText().toString();
-        myButton.setText(newText);
+
         CityName = newText;
     }
 
