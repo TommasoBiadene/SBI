@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -22,6 +23,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
@@ -33,8 +42,11 @@ public class SearchFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private Button myButton;
+    private EditText editTextNewText;
     private TextView temperatureTextView;
+
+    private String CityName;
     private String apiKey = "c566ee8a6a9310059a2caf2c6c81d05e",
             city = "Venezia",
             apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
@@ -70,16 +82,23 @@ public class SearchFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         temperatureTextView = getView().findViewById(R.id.temperatureTextView);
+        temperatureTextView = getView().findViewById(R.id.temperatureTextView);
+        myButton = getView().findViewById(R.id.myButton);
 
-        // Replace "YOUR_API_KEY" with your actual OpenWeatherMap API key
-        String apiKey = "c566ee8a6a9310059a2caf2c6c81d05e";
-        String city = "Venezia";
-        String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+        // Set up the button click listener
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the changeText function when the button is clicked
+                changeText(v);
+                String apiKey = "c566ee8a6a9310059a2caf2c6c81d05e";
+                String city = CityName;
+                String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+                new FetchWeatherTask().execute(apiUrl);
+            }
+        });
 
-        // Execute AsyncTask to fetch weather data
-        new FetchWeatherTask().execute(apiUrl);
     }
 
     @Override
@@ -94,8 +113,18 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        myButton = rootView.findViewById(R.id.myButton);
+        editTextNewText = rootView.findViewById(R.id.editTextNewText);
+        return rootView;
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        //return inflater.inflate(R.layout.fragment_search, container, false);
+    }
+    public void changeText(View view) {
+        String newText = editTextNewText.getText().toString();
+        myButton.setText(newText);
+        CityName = newText;
     }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, String> {
@@ -125,8 +154,6 @@ public class SearchFragment extends Fragment {
                 JSONObject mainObject = jsonObject.getJSONObject("coord");
                 double lat = mainObject.getDouble("lat");
                 double lon = mainObject.getDouble("lon");
-
-
 
 
                 String apiurl1= "";
