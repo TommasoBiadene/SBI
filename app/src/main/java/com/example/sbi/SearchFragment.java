@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,13 +22,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.IOException;
+
 
 
 
@@ -52,7 +66,7 @@ public class SearchFragment extends Fragment {
     private TextView so2;
     private TextView mp2_5;
     private TextView mp10;
-    private TextView nh3,error;
+    private TextView nh3,error,warningp;
 
 
     private String CityName;
@@ -101,8 +115,7 @@ public class SearchFragment extends Fragment {
         mp10 = getView().findViewById(R.id.mp10);
         nh3 = getView().findViewById(R.id.nh3);
         error = getView().findViewById(R.id.error);
-
-
+        warningp = getView().findViewById(R.id.warningp);
         myButton = getView().findViewById(R.id.myButton);
 
         // Set up the button click listener
@@ -174,7 +187,6 @@ public class SearchFragment extends Fragment {
                 double lon = mainObject.getDouble("lon");
 
 
-                String apiurl1= "";
                 URL url1 = new URL("https://api.openweathermap.org/data/2.5/air_pollution?lat="+lat+"&lon="+lon+"&appid=c566ee8a6a9310059a2caf2c6c81d05e");//https://api.openweathermap.org/data/2.5/air_pollution?lat=45.438759&lon=12.327145&appid=c566ee8a6a9310059a2caf2c6c81d05e
                 HttpURLConnection connection1 = (HttpURLConnection) url1.openConnection();
                 BufferedReader reader1 = new BufferedReader(new InputStreamReader(connection1.getInputStream()));
@@ -184,6 +196,127 @@ public class SearchFragment extends Fragment {
                 }
                 reader1.close();
                 connection1.disconnect();
+
+
+                System.out.println(result1);
+
+//////////////////////////////////////////////////////////////////////datetime
+
+                // Create a LocalDateTime object representing the current date and time
+                LocalDateTime localDateTime = LocalDateTime.now();
+
+                // Convert LocalDateTime to Instant
+                Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
+
+                // Get the Unix timestamp (in seconds)
+                long unixTimestamp = instant.getEpochSecond();
+                long unixTimestamp1 = instant.getEpochSecond()-864000;
+
+
+
+                Instant instant_spet_nonunix = Instant.ofEpochSecond(unixTimestamp1);
+
+                // Convert Instant to LocalDateTime in a specific time zone (e.g., UTC)
+                LocalDateTime localDateTime_nonunix = LocalDateTime.ofInstant(instant_spet_nonunix, ZoneOffset.UTC);
+
+
+                System.out.println("Current LocalDateTime: " + localDateTime);
+                System.out.println("Unix Timestamp: " + unixTimestamp);
+                System.out.println("Current LocalDateTime 2: " + localDateTime_nonunix);
+                System.out.println("Unix Timestamp 2: " + unixTimestamp1);
+
+
+//////////////////////////////////////////////////////////////////////datetime
+
+
+                String result2 = "";
+                URL url2 = new URL("https://api.openweathermap.org/data/2.5/air_pollution/history?lat="+lat+"&lon="+lon+"&start="+unixTimestamp1+"&end="+unixTimestamp+"&appid=c566ee8a6a9310059a2caf2c6c81d05e");
+                HttpURLConnection connection2 = (HttpURLConnection) url2.openConnection();
+                BufferedReader reader2 = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
+                String line2;
+                while ((line2 = reader2.readLine()) != null) {
+                    result2 += line2;
+                }
+                reader2.close();
+                connection2.disconnect();
+
+                System.out.println(result2);
+
+
+                try {
+                    JSONObject jsonObject111 = new JSONObject(result2);
+                    JSONArray listArray = jsonObject111.getJSONArray("list");
+                    int numberhours=0;
+                    int oneday= 0;
+                    double maxmp10inoneday=0;
+                    int seriedi4= 0;
+                    int seriedi10=0;
+
+                    for (int i = 0; i < listArray.length(); i++) {
+
+                        JSONObject entryObject = listArray.getJSONObject(i);
+                        JSONObject componentsObject = entryObject.getJSONObject("components");
+                        double coValue = componentsObject.getDouble("pm10");
+                        if(coValue>maxmp10inoneday){
+                            maxmp10inoneday=coValue;
+                        }
+                        if(oneday==24&&maxmp10inoneday>=50){
+                            seriedi4++;
+                            seriedi10++;
+                            oneday=0;
+                            maxmp10inoneday=0;
+                        }
+                        if(oneday==24&&maxmp10inoneday<50){
+                            seriedi4=0;
+                            seriedi10=0;
+                            maxmp10inoneday=0;
+                            oneday=0;
+                        }
+
+                        oneday++;
+                        numberhours ++;
+
+                        System.out.println("CO Valuessssssssssssssss: " + coValue);
+                    }
+                    System.out.println(numberhours+" aa " +seriedi10+" aa "+seriedi4);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                JSONObject jsonResult1 = new JSONObject(result2);
+                JSONObject list1 = jsonResult1.getJSONArray("list").getJSONObject(0);
+                JSONObject main1 = list1.getJSONObject("main");
+                int aqi1 = main1.getInt("aqi");
+
+
+
+                JSONObject jsonResult11 = new JSONObject(result1);
+
+                jsonResult11.put("aqi", aqi1);
+
+                result1 = jsonResult11.toString();
+
+                //System.out.println(result1);
+                //System.out.println(jsonResult11);
+                //System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+aqi1);
+               // warningp.setText( "rrrrrrrrrrrrrrrrrilevata: "+aqi1);
+
+/*
+
+                JSONObject jsonResult = new JSONObject(result);
+                JSONObject list = jsonResult.getJSONArray("list").getJSONObject(0);
+                JSONObject main = list.getJSONObject("main");
+                JSONObject components = list.getJSONObject("components");
+
+                main.put("new", 111111);
+
+                String modifiedJsonString = jsonResult.toString();
+                System.out.println(result1);
+                System.out.println(modifiedJsonString);
+
+*/
+
 
 
 
@@ -200,8 +333,11 @@ public class SearchFragment extends Fragment {
         protected void onPostExecute(String result) {
             try {
 
+
+
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject list = jsonResult.getJSONArray("list").getJSONObject(0);
+                int Probabilita = jsonResult.getInt("aqi");
                 JSONObject main = list.getJSONObject("main");
                 JSONObject components = list.getJSONObject("components");
                 int aqi = main.getInt("aqi");
@@ -213,6 +349,29 @@ public class SearchFragment extends Fragment {
                 double pm2_5_= components.getDouble("pm2_5");
                 double pm10_= components.getDouble("pm10");
                 double nh3_= components.getDouble("nh3");
+
+                //int pippo=main.getInt("new");
+
+
+
+                /*
+                String jsonString = "[{\"name\": \"John\", \"age\": 30, \"city\": \"New York\"}, {\"name\": \"Alice\", \"age\": 25, \"city\": \"London\"}]";
+
+                JSONArray jsonArray = new JSONArray(jsonString);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject person = jsonArray.getJSONObject(i);
+                    // Assuming "tel_number" is a string; you can adjust the type accordingly
+                    person.put("tel_number", "123-456-7890");
+                }
+
+                String modifiedJsonString = jsonArray.toString();
+
+                System.out.println(modifiedJsonString);
+                */
+
+
+
 
 
                 //String pollutionInfo = "Air Quality Index (AQI): " + aqi +"\n co "+ co_+"\nno "+ no_+"\nno2 "+no2_+"\no3 "+ o3_+"\nso2 "+ so2_+"\nmp2_5 "+ pm2_5_+"\nmp10 "+ pm10_+"\nnh3 "+ nh3_/*+"\nlat "+ lat11+"\nlon "+ lon11*/ ;
@@ -235,6 +394,9 @@ public class SearchFragment extends Fragment {
                 mp2_5.setText( "Pm2_5 rilevata: "+pm2_5_);
                 mp10.setText( "Pm10 rilevata: "+pm10_);
                 nh3.setText( "Nh3 rilevata: "+nh3_);
+                warningp.setText( "rrrrrrrrrrrrrrrrrilevata: "+Probabilita);
+
+
 
 
 
