@@ -165,6 +165,11 @@ public class SearchFragment extends Fragment {
             String apiUrl = urls[0];
             String result = "";
             String result1 = "";
+            int numberhours=0;
+            int oneday= 0;
+            double maxmp10inoneday=0;
+            int seriedi4= 0;
+            int seriedi10=0;
 
             try {
                 URL url = new URL(apiUrl);
@@ -246,11 +251,6 @@ public class SearchFragment extends Fragment {
                 try {
                     JSONObject jsonObject111 = new JSONObject(result2);
                     JSONArray listArray = jsonObject111.getJSONArray("list");
-                    int numberhours=0;
-                    int oneday= 0;
-                    double maxmp10inoneday=0;
-                    int seriedi4= 0;
-                    int seriedi10=0;
 
                     for (int i = 0; i < listArray.length(); i++) {
 
@@ -279,6 +279,7 @@ public class SearchFragment extends Fragment {
                         System.out.println("CO Valuessssssssssssssss: " + coValue);
                     }
                     System.out.println(numberhours+" aa " +seriedi10+" aa "+seriedi4);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -294,6 +295,8 @@ public class SearchFragment extends Fragment {
                 JSONObject jsonResult11 = new JSONObject(result1);
 
                 jsonResult11.put("aqi", aqi1);
+                jsonResult11.put("seriedi4", seriedi4);
+                jsonResult11.put("seriedi10", seriedi10);
 
                 result1 = jsonResult11.toString();
 
@@ -338,6 +341,8 @@ public class SearchFragment extends Fragment {
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject list = jsonResult.getJSONArray("list").getJSONObject(0);
                 int Probabilita = jsonResult.getInt("aqi");
+                int ssequenza4 = jsonResult.getInt("seriedi4");
+                int ssequenza10 = jsonResult.getInt("seriedi10");
                 JSONObject main = list.getJSONObject("main");
                 JSONObject components = list.getJSONObject("components");
                 int aqi = main.getInt("aqi");
@@ -394,7 +399,17 @@ public class SearchFragment extends Fragment {
                 mp2_5.setText( "Pm2_5 rilevata: "+pm2_5_);
                 mp10.setText( "Pm10 rilevata: "+pm10_);
                 nh3.setText( "Nh3 rilevata: "+nh3_);
-                warningp.setText( "rrrrrrrrrrrrrrrrrilevata: "+Probabilita);
+
+
+
+                if (ssequenza4>3&&ssequenza10<10){
+                    warningp.setText("Livello di allerta 2: zona ZTL rossa");
+                } else if(ssequenza4>3&&ssequenza10>9){
+                    warningp.setText("Livello di allerta 1: zona ZTL arancione");
+                }else {
+                    warningp.setText("Livello di allerta 0: zona ZTL verde");
+                }
+
 
 
 
